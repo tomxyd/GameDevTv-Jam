@@ -4,15 +4,47 @@ using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] float health;
+    [SerializeField] Vector3 lastPosition;
+
+    private int _stars;
+    private bool _isAlive;
+    public int stars { get { return _stars; } }
+    public bool isAlive { get { return _isAlive; } }
+    public delegate void DeathAction();
+    public static event DeathAction OnDeath;
+
+    private void Start()
     {
-        
+        _stars = 0;
+    }
+    public void Die(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            lastPosition = transform.position;
+            StartCoroutine(RespawnPlayer());
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator RespawnPlayer()
     {
-        
+        _isAlive = false;
+        if (OnDeath != null) OnDeath();
+
+        yield return new WaitForSeconds(1f);
+
+        _isAlive = true;
+        health = 1;
+        _stars = 0;
+        transform.position = lastPosition;
+    }
+
+
+
+    public void UpdatePlayerStars()
+    {
+        _stars++;
     }
 }

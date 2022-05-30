@@ -4,16 +4,26 @@ using UnityEngine;
 
 public class Star : MonoBehaviour
 {
+    AudioSource audioData;
+
+
+    private void Start()
+    {
+        audioData = GetComponent<AudioSource>();
+
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+
+            audioData.Play();
             PlayerCharacter player = other.GetComponent<PlayerCharacter>();
 
             if(player != null)
             {
                 player.UpdatePlayerStars();
-                Destroy(this.gameObject);
+                StartCoroutine(Die());
             }
 
             if(player.stars == 4)
@@ -21,5 +31,11 @@ public class Star : MonoBehaviour
                 Debug.Log("Game Completed");
             }
         }
+    }
+    IEnumerator Die()
+    {
+        audioData.Play();
+        yield return new WaitForSeconds(1f);
+        Destroy(this.gameObject);
     }
 }

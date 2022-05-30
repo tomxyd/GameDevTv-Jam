@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerCharacter : MonoBehaviour
 {
     [SerializeField] float health;
-    [SerializeField] Vector3 lastPosition;
+    Vector3 lastPosition;
 
     private int _stars;
     private bool _isAlive;
